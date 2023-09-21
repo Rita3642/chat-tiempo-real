@@ -1,0 +1,35 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- Incluir el archivo CSS de Bootstrap desde el servidor de BootstrapCDN -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- Incluir el archivo JavaScript de jQuery (requerido por Bootstrap) desde el servidor de BootstrapCDN -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Incluir el archivo JavaScript de Bootstrap desde el servidor de BootstrapCDN -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+
+    <div class="container my-3">
+
+        {% block 'content' %}
+
+        {% endblock %}
+    </div>
+
+
+
+    <script src="{% static 'css/main.css' %}" ></script>
+    <script src="{% static 'js/main.js' %}" ></script>
+
+    
+</body>
+</html>

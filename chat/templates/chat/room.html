@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+
+{% block 'content' %}
+    <style>
+        body, html, .container {
+            height: 100%;
+            overflow: hidden;
+            background: #ccc;
+        }
+        #boxMsj {
+            overflow-y: auto;
+            height: calc(100% - 100px);
+        }
+    </style>
+
+    <div id="chat" class="container">
+
+        <div id="boxMsj">
+
+        </div>
+ 
+        <div class="d-flex">
+            <input type="text" name="" id="message" class="form-control" style="margin-right: 10px;">
+            <input type="submit" value="Enviar" id="btnMessage" class="mt-1 btn btn-success">
+        </div>
+    </div>
+
+    <script>
+ 
+
+        window.onload = function(){
+
+            var url = 'ws://127.0.0.1:8000/ws/chat/room/{{ room.id }}';
+
+            
+            const chatSocket = new WebSocket(url);
+
+            document.querySelector('#btnMessage').addEventListener('click', sendMsj)
+            document.querySelector('#message').addEventListener('keypress', function(e){
+                if(e.keyCode == 13){
+                    sendMsj()
+                }
+            })
+
+
+            function sendMsj() {
+                message = document.querySelector("#message")
+
+                if(message.value.trim() !== ''){
+                    chatSocket.send(JSON.stringify({'message': message.value.trim()}))
+                    message.value = ''
+                }
+            }
+                        
+            chatSocket.onopen = function(e) {
+                console.log('Ws abierto')
+            };
+
+            chatSocket.onmessage = function(data) {
+                var data = JSON.parse(data.data)
+                var msj = data.message
+                var username = data.username
+                var datetime = data.datetime
+
+                var customClassMsj = 'alert-success mr-5'
+
+                if('{{ request.user }}' != username){
+                    customClassMsj = 'alert-light ml-5'
+                }
+
+                document.querySelector('#boxMsj').innerHTML += `
+                <div class="alert ${customClassMsj} text-dark py-2 px-3">
+                    <small class="font-italic">${username}</small><br/>
+                    ${msj}
+                    <small class="float-right">${datetime}</small>
+                </div>
+                `
+
+                console.log(msj)
+            }
+
+            chatSocket.onclose = function(e) {
+                console.log('Conexión cerrada')
+            };
+        }
+
+    </script>
+
+{% endblock %}
